@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmersville Education Foundation Scholarship Application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4b2e83; /* Farmersville Purple */
+            --primary-dark: #3a226b;
+            --secondary-color: #d4af37; /* Gold accent */
+            --bg-color: #f4f6f8;
+            --text-dark: #2c3e50;
+            --input-border: #ccd0d5;
+            --white: #ffffff;
+            --success-green: #28a745;
+            --success-bg: #d4edda;
+            --success-border: #c3e6cb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 8px solid var(--primary-color);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        h2 {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: 18px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #444;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #fafafa;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(75, 46, 131, 0.1);
+        }
+
+        .grid-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .grid-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+        
+        /* Auto-save status indicator */
+        .autosave-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--white);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .autosave-status.saving {
+            color: #666;
+        }
+
+        .autosave-status.saved {
+            color: var(--success-green);
+        }
+
+        .autosave-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .autosave-status.saving .autosave-dot {
+            background: #f0ad4e;
+            animation: pulse 1s infinite;
+        }
+
+        .autosave-status.saved .autosave-dot {
+            background: var(--success-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Clear data button */
+        .clear-data-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 10px;
+        }
+
+        .clear-data-btn:hover {
+            color: #c00;
+        }
+
+        /* Personal Statement Instructions */
+        .statement-instructions {
+            background-color: #eef2f7;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        .statement-instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .statement-instructions li {
+            margin-bottom: 5px;
+        }
+
+        /* Recommendation Section Specifics */
+        .canned-message-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        /* Styles for Gladys Best Section */
+        .gladys-section {
+            background-color: #f9f9f9;
+            border: 2px dashed var(--primary-color);
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+        }
+        
+        .gladys-intro {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .gladys-prompt {
+            background-color: #eef;
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* Specific Requirement: Times New Roman, 12pt */
+        #gladysEssay {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            min-height: 300px;
+        }
+
+        .word-count-display {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Button Styles */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 18px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-main {
+            background-color: var(--primary-color);
+            flex: 2;
+        }
+        .btn-main:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #555; 
+            flex: 1;
+        }
+        .btn-secondary:hover {
+            background-color: #333;
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: #888;
+            font-weight: normal;
+            margin-left: 5px;
+        }
+
+        /* Submission section styling */
+        .submission-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .submission-section h3 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: none;
+            color: var(--primary-color);
+        }
+
+        .submission-steps {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .submission-steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .submission-steps li {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .counselor-email {
+            background: #fff3cd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            text-align: center;
+            margin: 15px 0;
+            border: 1px solid #ffc107;
+        }
+
+        /* Restored data notice */
+        .restored-notice {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .restored-notice-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dismiss-notice {
+            background: none;
+            border: none;
+            color: #155724;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 5px;
+            box-shadow: none;
+        }
+
+        .dismiss-notice:hover {
+            color: #0d3d16;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Farmersville Education Foundation</h1>
+    <h2>Scholarship Application</h2>
+
+    <!-- Restored data notice (hidden by default) -->
+    <div id="restoredNotice" class="restored-notice" style="display: none;">
+        <div class="restored-notice-text">
+            <span>✓</span>
+            <span><strong>Your progress has been restored!</strong> We saved your previous work automatically.</span>
+        </div>
+        <button class="dismiss-notice" onclick="dismissNotice()">×</button>
+    </div>
+
+    <form id="scholarshipForm">
+        <h3>Personal Information</h3>
+        <div class="grid-row">
+            <div class="grid-col form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" placeholder="First" required>
+            </div>
+            <div class="grid-col form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" placeholder="Last" required>
+            </div>
+            <div class="grid-col form-group">
+                <label for="phone">Telephone No(s)</label>
+                <input type="text" id="phone" placeholder="(555) 555-5555">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" placeholder="123 Main Street">
+        </div>
+
+        <div class="grid-row">
+            <div class="grid-col form-group" style="flex: 2;">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="Farmersville">
+            </div>
+            <div class="grid-col form-group" style="flex: 1;">
+                <label for="state">State</label>
+                <input type="text" id="state" placeholder="TX">
+            </div>
+            <div class="grid-col form-group" style="flex: 1;">
+                <label for="zip">Zip Code</label>
+                <input type="text" id="zip" placeholder="75442">
+            </div>
+            <div class="grid-col form-group" style="flex: 2;">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="student@example.com">
+            </div>
+        </div>
+
+        <h3>Academic Information</h3>
+        <div class="grid-row">
+            <div class="grid-col form-group">
+                <label for="gpa">Most current GPA</label>
+                <input type="text" id="gpa">
+            </div>
+            <div class="grid-col form-group">
+                <label for="rank">Rank in Class <span class="helper-text">(e.g., 5 out of 100)</span></label>
+                <input type="text" id="rank">
+            </div>
+            <div class="grid-col form-group">
+                <label for="collegeCredits">College Credit Hours</label>
+                <input type="text" id="collegeCredits">
+            </div>
+        </div>
+
+        <h3>Test Scores</h3>
+        <div class="form-group">
+            <label>SAT Score</label>
+            <div class="score-grid">
+                <input type="text" id="satReading" placeholder="Reading">
+                <input type="text" id="satMath" placeholder="Math">
+                <input type="text" id="satWriting" placeholder="Writing">
+                <input type="text" id="satTotal" placeholder="Total">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>ACT Score</label>
+            <div class="score-grid">
+                <input type="text" id="actEng" placeholder="English">
+                <input type="text" id="actMath" placeholder="Math">
+                <input type="text" id="actReading" placeholder="Reading">
+                <input type="text" id="actScience" placeholder="Science">
+                <input type="text" id="actComp" placeholder="Composite">
+            </div>
+        </div>
+
+        <h3>Future Plans</h3>
+        <div class="form-group">
+            <label for="collegeName">College to which you plan to attend</label>
+            <input type="text" id="collegeName">
+        </div>
+
+        <div class="form-group">
+            <label for="major">Proposed field of study in college</label>
+            <input type="text" id="major">
+        </div>
+
+        <div class="form-group">
+            <label for="otherScholarships">Have you applied for any other scholarships?</label>
+            <select id="otherScholarships">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="receivedScholarships">If yes, have you received any? <span class="helper-text">(Please list names below)</span></label>
+            <textarea id="receivedScholarships" rows="3" placeholder="N/A if none received yet"></textarea>
+        </div>
+
+        <h3>Activities & Achievements</h3>
+        <div class="form-group">
+            <label for="extracurriculars">Extracurricular activities in high school</label>
+            <textarea id="extracurriculars" rows="5" placeholder="List sports, clubs, organizations, etc."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="honors">Honors during high school</label>
+            <textarea id="honors" rows="5" placeholder="List academic awards, recognitions, etc."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="civic">Civic and community activities</label>
+            <textarea id="civic" rows="5" placeholder="List volunteer work, community service, etc."></textarea>
+        </div>
+
+        <h3>Employment History</h3>
+        <div class="grid-row">
+            <div class="grid-col form-group" style="flex: 0 0 150px;">
+                <label for="employed">Employed?</label>
+                <select id="employed">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            <div class="grid-col form-group">
+                <label for="employerName">Name of Employer <span class="helper-text">(If applicable)</span></label>
+                <input type="text" id="employerName">
+            </div>
+        </div>
+
+        <h3>Personal Statement</h3>
+        <div class="form-group">
+            <div class="statement-instructions">
+                <strong>Please provide a typed personal statement (Limit 1,000 words) that includes:</strong>
+                <ul>
+                    <li>(1) Your reasons for wanting an education</li>
+                    <li>(2) Area of study and what has attracted you to it</li>
+                    <li>(3) What you have done in high school to prepare yourself for the future</li>
+                    <li>(4) How you view your community</li>
+                    <li>(5) How you view yourself</li>
+                    <li>(6) Accomplishments in high school</li>
+                </ul>
+                <em>Be specific - include what you feel you have contributed to organizations or projects in which you have been involved.</em>
+            </div>
+            <textarea id="personalStatement" rows="12" placeholder="Type your personal statement here..." onkeyup="updateWordCounts()"></textarea>
+            <div id="statementWordCount" class="word-count-display">0 / 1000 words</div>
+        </div>
+
+        <h3>Letters of Recommendation</h3>
+        <div class="form-group">
+            <div class="statement-instructions">
+                <strong>Requirement:</strong> Two recommendations are required.
+                <ul>
+                    <li>One must be completed by a teacher or other school representative.</li>
+                    <li>One must be completed by a person outside your school environment (e.g., an employer or community member).</li>
+                    <li><em>References from relatives will not be considered.</em></li>
+                </ul>
+                <p style="margin-top: 10px; margin-bottom: 0;"><strong>Instructions:</strong> You are responsible for sending the recommendation form to your two references. You can use the copyable template below to easily email them the link.</p>
+            </div>
+        </div>
+
+        <div class="form-group canned-message-box">
+            <label>Email Template for Recommenders</label>
+            <p style="font-size: 13px; color: #666; margin-top: 0; margin-bottom: 10px;">Click the button below to copy this template, then paste it into a new email from your personal account to send to your recommenders.</p>
+            <textarea id="cannedMessage" rows="7" readonly style="background: #fff; cursor: text;">Dear Recommender,&#10;&#10;I am applying for the Farmersville Education Foundation Scholarship and would be honored if you would provide a recommendation for me. &#10;&#10;Please fill out this brief form at your earliest convenience: https://bit.ly/46uLsRd&#10;&#10;Thank you for your time and support!</textarea>
+            <button type="button" id="copyBtn" class="btn-secondary" onclick="copyCannedMessage()" style="padding: 12px; margin-top: 15px; font-size: 14px; max-width: 250px; flex: none;">
+                Copy Message to Clipboard
+            </button>
+        </div>
+
+        <!-- Gladys Best Section -->
+        <div class="gladys-section">
+            <h3 style="margin-top:0; border:none; text-align: center;">Gladys Best Scholarship (Optional)</h3>
+            
+            <p class="gladys-intro">
+                Gladys David Best was a woman of great faith, good business sense, and a strong sense of community service. 
+                She exemplified the spirit of giving back to her family and community. This scholarship is awarded annually 
+                by her grandchildren to a student sharing her desire to build a better future.
+            </p>
+
+            <div class="gladys-prompt">
+                <strong>Essay Instructions:</strong> Write a letter to Ms. Best.
+                You should tell why you are committed to a college education, the contributions you believe your generation 
+                will make to the world, and your personal goals to effect positive change in the lives of others.
+            </div>
+
+            <label for="gladysEssay">Type your Letter (Times New Roman, 12pt, Limit 500 Words):</label>
+            <textarea id="gladysEssay" onkeyup="updateWordCounts()"></textarea>
+            <div id="gladysWordCount" class="word-count-display">0 / 500 words</div>
+        </div>
+
+        <!-- Submission Section -->
+        <div class="submission-section">
+            <h3>📋 Submit Your Application</h3>
+            
+            <div class="submission-steps">
+                <ol>
+                    <li><strong>Review your application</strong> — Make sure all required fields are filled out completely.</li>
+                    <li><strong>Download your PDF</strong> — Click the button below to generate your complete application.</li>
+                    <li><strong>Email your application</strong> — Send the PDF to your high school counselor at the address below.</li>
+                    <li><strong>Confirm your recommendations</strong> — Ensure both recommenders have submitted their forms.</li>
+                </ol>
+            </div>
+
+            <p style="text-align: center; font-size: 14px; color: #666; margin-bottom: 10px;">Send your completed application to:</p>
+            <div class="counselor-email">jcooper@farmersvilleisd.org</div>
+
+            <div class="btn-group" style="justify-content: center;">
+                <button type="button" class="btn-main" onclick="generateCombinedPDF()" style="max-width: 400px;">
+                    📄 Download Complete Application (PDF)
+                </button>
+            </div>
+
+            <p style="text-align: center; font-size: 12px; color: #888; margin-top: 15px;">
+                Your progress is automatically saved to this browser. 
+                <button type="button" class="clear-data-btn" onclick="clearSavedData()">Clear saved data</button>
+            </p>
+        </div>
+    </form>
+</div>
+
+<!-- Auto-save status indicator -->
+<div id="autosaveStatus" class="autosave-status saved">
+    <div class="autosave-dot"></div>
+    <span id="autosaveText">All changes saved</span>
+</div>
+
+<script>
+    // =============================================
+    // AUTO-SAVE FUNCTIONALITY
+    // =============================================
+    const STORAGE_KEY = 'fef_scholarship_application';
+    let saveTimeout = null;
+
+    // List of all form field IDs to save/restore
+    const formFields = [
+        'firstName', 'lastName', 'phone', 'address', 'city', 'state', 'zip', 'email',
+        'gpa', 'rank', 'collegeCredits',
+        'satReading', 'satMath', 'satWriting', 'satTotal',
+        'actEng', 'actMath', 'actReading', 'actScience', 'actComp',
+        'collegeName', 'major', 'otherScholarships', 'receivedScholarships',
+        'extracurriculars', 'honors', 'civic',
+        'employed', 'employerName',
+        'personalStatement', 'gladysEssay'
+    ];
+
+    // Save form data to localStorage
+    function saveFormData() {
+        const statusEl = document.getElementById('autosaveStatus');
+        const textEl = document.getElementById('autosaveText');
+        
+        statusEl.className = 'autosave-status saving';
+        textEl.textContent = 'Saving...';
+
+        const data = {};
+        formFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                data[id] = el.value;
+            }
+        });
+
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            setTimeout(() => {
+                statusEl.className = 'autosave-status saved';
+                textEl.textContent = 'All changes saved';
+            }, 500);
+        } catch (e) {
+            console.error('Failed to save form data:', e);
+            textEl.textContent = 'Save failed';
+        }
+    }
+
+    // Restore form data from localStorage
+    function restoreFormData() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                let hasData = false;
+
+                formFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && data[id]) {
+                        el.value = data[id];
+                        hasData = true;
+                    }
+                });
+
+                if (hasData) {
+                    document.getElementById('restoredNotice').style.display = 'flex';
+                    updateWordCounts();
+                }
+            }
+        } catch (e) {
+            console.error('Failed to restore form data:', e);
+        }
+    }
+
+    // Clear saved data
+    function clearSavedData() {
+        if (confirm('Are you sure you want to clear all saved data? This cannot be undone.')) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+    }
+
+    // Dismiss the restored notice
+    function dismissNotice() {
+        document.getElementById('restoredNotice').style.display = 'none';
+    }
+
+    // Debounced save on input
+    function triggerAutoSave() {
+        if (saveTimeout) {
+            clearTimeout(saveTimeout);
+        }
+        saveTimeout = setTimeout(saveFormData, 1000);
+    }
+
+    // Attach auto-save listeners to all form fields
+    function initAutoSave() {
+        formFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', triggerAutoSave);
+                el.addEventListener('change', triggerAutoSave);
+            }
+        });
+    }
+
+    // =============================================
+    // WORD COUNT FUNCTIONALITY
+    // =============================================
+    function getWordCount(text) {
+        if (!text) return 0;
+        return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+    }
+
+    function updateWordCounts() {
+        // Update Gladys
+        const gladysText = document.getElementById('gladysEssay').value;
+        const gladysCount = getWordCount(gladysText);
+        const gladysDiv = document.getElementById('gladysWordCount');
+        
+        gladysDiv.innerText = `${gladysCount} / 500 words`;
+        gladysDiv.style.color = gladysCount > 500 ? "red" : "#666";
+        gladysDiv.style.fontWeight = gladysCount > 500 ? "bold" : "normal";
+
+        // Update Personal Statement
+        const stmtText = document.getElementById('personalStatement').value;
+        const stmtCount = getWordCount(stmtText);
+        const stmtDiv = document.getElementById('statementWordCount');
+        
+        stmtDiv.innerText = `${stmtCount} / 1000 words`;
+        stmtDiv.style.color = stmtCount > 1000 ? "red" : "#666";
+        stmtDiv.style.fontWeight = stmtCount > 1000 ? "bold" : "normal";
+    }
+
+    // =============================================
+    // COPY CANNED MESSAGE
+    // =============================================
+    function copyCannedMessage() {
+        const copyText = document.getElementById("cannedMessage");
+        const btn = document.getElementById("copyBtn");
+        
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "✓ Copied!";
+            btn.style.backgroundColor = "#28a745";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = "";
+            }, 3000);
+        }).catch(err => {
+            alert("Failed to copy text. Please select and copy manually.");
+        });
+    }
+
+    // =============================================
+    // PDF GENERATION - COMBINED PDF
+    // =============================================
+    const { jsPDF } = window.jspdf;
+    const val = (id) => document.getElementById(id).value;
+
+    async function generateCombinedPDF() {
+        // Check Personal Statement word count
+        const stmtCount = getWordCount(val("personalStatement"));
+        if (stmtCount > 1000) {
+            alert(`Unable to generate PDF: Your Personal Statement is ${stmtCount} words, which exceeds the limit of 1,000 words. Please reduce the length and try again.`);
+            return;
+        }
+
+        // Check Gladys essay word count (if filled out)
+        const gladysText = val("gladysEssay");
+        const gladysCount = getWordCount(gladysText);
+        if (gladysText && gladysCount > 500) {
+            alert(`Unable to generate PDF: Your Gladys Best essay is ${gladysCount} words, which exceeds the limit of 500 words. Please reduce the length and try again.`);
+            return;
+        }
+
+        const doc = new jsPDF();
+        
+        // --- Header Design ---
+        doc.setFillColor(75, 46, 131); 
+        doc.rect(0, 0, 210, 30, 'F');
+        
+        doc.setFontSize(18);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.text("Farmersville Education Foundation", 105, 15, null, null, "center");
+        doc.setFontSize(12);
+        doc.text("Scholarship Application", 105, 24, null, null, "center");
+
+        // Reset Text Color
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "normal");
+
+        let y = 45; 
+        const lineHeight = 7;
+        const pageHeight = 280;
+        const leftMargin = 15;
+        const valueMargin = 60;
+
+        // Helper to add sections
+        function addSectionTitle(title) {
+            if (y > pageHeight - 30) { doc.addPage(); y = 20; }
+            y += 5;
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(75, 46, 131); 
+            doc.text(title.toUpperCase(), leftMargin, y);
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(200, 200, 200);
+            doc.line(leftMargin, y+2, 195, y+2);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont("helvetica", "normal");
+            y += 10;
+        }
+
+        // Helper to add data lines
+        function addLine(label, value) {
+            if (!value) value = "N/A";
+            const splitValue = doc.splitTextToSize(value, 130);
+            const heightNeeded = splitValue.length * lineHeight;
+            
+            if (y + heightNeeded > pageHeight) { doc.addPage(); y = 20; }
+            
+            doc.setFont("helvetica", "bold");
+            doc.text(label + ":", leftMargin, y);
+            
+            doc.setFont("helvetica", "normal");
+            doc.text(splitValue, valueMargin, y);
+            y += heightNeeded + 2;
+        }
+        
+        // Helper specifically for long text blocks
+        function addStatement(text) {
+            const splitValue = doc.splitTextToSize(text, 180); 
+            splitValue.forEach(line => {
+                if (y > pageHeight - 10) { 
+                    doc.addPage(); 
+                    y = 20; 
+                }
+                doc.text(line, leftMargin, y);
+                y += 6;
+            });
+            y += 5;
+        }
+
+        // --- PDF Content ---
+        const fullName = `${val("firstName")} ${val("lastName")}`.trim();
+        const fullAddress = `${val("address")}, ${val("city")}, ${val("state")} ${val("zip")}`.trim();
+        
+        addSectionTitle("Personal Information");
+        addLine("Name", fullName || "N/A");
+        addLine("Telephone", val("phone"));
+        addLine("Address", fullAddress);
+        addLine("Email", val("email"));
+        
+        addSectionTitle("Academic Information");
+        addLine("Current GPA", val("gpa"));
+        addLine("Class Rank", val("rank"));
+        addLine("College Credits", val("collegeCredits"));
+        
+        // SAT Scores - improved formatting
+        if (y + 35 > pageHeight) { doc.addPage(); y = 20; }
+        y += 3;
+        doc.setFont("helvetica", "bold");
+        doc.text("SAT Scores:", leftMargin, y);
+        doc.setFont("helvetica", "normal");
+        y += 8;
+        doc.text(`Reading: ${val("satReading") || "—"}`, leftMargin + 10, y);
+        doc.text(`Math: ${val("satMath") || "—"}`, leftMargin + 60, y);
+        y += 7;
+        doc.text(`Writing: ${val("satWriting") || "—"}`, leftMargin + 10, y);
+        doc.text(`Total: ${val("satTotal") || "—"}`, leftMargin + 60, y);
+        y += 12;
+        
+        // ACT Scores - improved formatting
+        doc.setFont("helvetica", "bold");
+        doc.text("ACT Scores:", leftMargin, y);
+        doc.setFont("helvetica", "normal");
+        y += 8;
+        doc.text(`English: ${val("actEng") || "—"}`, leftMargin + 10, y);
+        doc.text(`Math: ${val("actMath") || "—"}`, leftMargin + 60, y);
+        doc.text(`Reading: ${val("actReading") || "—"}`, leftMargin + 110, y);
+        y += 7;
+        doc.text(`Science: ${val("actScience") || "—"}`, leftMargin + 10, y);
+        doc.text(`Composite: ${val("actComp") || "—"}`, leftMargin + 60, y);
+        y += 12;
+
+        addSectionTitle("Future Plans");
+        addLine("College", val("collegeName"));
+        addLine("Field of Study", val("major"));
+        addLine("Other Apps?", val("otherScholarships"));
+        if(val("receivedScholarships")) addLine("Scholarships Rec'd", val("receivedScholarships"));
+
+        addSectionTitle("Activities & Achievements");
+        addLine("Extracurriculars", val("extracurriculars"));
+        addLine("Honors", val("honors"));
+        addLine("Civic Activities", val("civic"));
+
+        addSectionTitle("Employment");
+        addLine("Employed", val("employed"));
+        if(val("employerName")) addLine("Employer Name", val("employerName"));
+
+        // Add Personal Statement on new page
+        if(val("personalStatement")) {
+            doc.addPage(); 
+            y = 20;
+            addSectionTitle("Personal Statement");
+            addStatement(val("personalStatement"));
+        }
+
+        // Add Gladys Best Essay if filled out
+        if(gladysText && gladysText.trim() !== '') {
+            doc.addPage();
+            
+            // Gladys Best Header
+            doc.setFillColor(75, 46, 131);
+            doc.rect(0, 0, 210, 25, 'F');
+            
+            doc.setFontSize(14);
+            doc.setTextColor(255, 255, 255);
+            doc.setFont("helvetica", "bold");
+            doc.text("Gladys Best Scholarship Essay", 105, 16, null, null, "center");
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            
+            y = 35;
+            
+            // Applicant info
+            doc.setFont("helvetica", "bold");
+            doc.text("Applicant:", leftMargin, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(fullName || "N/A", valueMargin, y);
+            y += 8;
+            
+            doc.setFont("helvetica", "bold");
+            doc.text("Email:", leftMargin, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(val("email") || "N/A", valueMargin, y);
+            y += 8;
+            
+            doc.setFont("helvetica", "bold");
+            doc.text("Phone:", leftMargin, y);
+            doc.setFont("helvetica", "normal");
+            doc.text(val("phone") || "N/A", valueMargin, y);
+            y += 15;
+            
+            // Divider line
+            doc.setDrawColor(200, 200, 200);
+            doc.line(leftMargin, y, 195, y);
+            y += 15;
+            
+            // Essay content in Times New Roman style (using helvetica as fallback)
+            doc.setFont("times", "normal");
+            doc.setFontSize(12);
+            
+            const essayLines = doc.splitTextToSize(gladysText, 180);
+            const essayLineHeight = 8; // Double-spaced effect
+            
+            essayLines.forEach(line => {
+                if (y > pageHeight - 10) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.text(line, leftMargin, y);
+                y += essayLineHeight;
+            });
+        }
+
+        // Generate filename and save
+        const cleanName = fullName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        const filename = `FEF_Scholarship_${cleanName || "Application"}.pdf`;
+        doc.save(filename);
+
+        // Store filename for email
+        window.lastGeneratedFilename = filename;
+    }
+
+    // =============================================
+    // INITIALIZATION
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        restoreFormData();
+        initAutoSave();
+        updateWordCounts();
+    });
+</script>
+
+</body>
+</html>
